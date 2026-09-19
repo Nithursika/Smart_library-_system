@@ -33,7 +33,12 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   supabase_flutter: ^2.9.1
-
+  http: ^1.2.2
+  shared_preferences: ^2.5.5
+  permission_handler: ^11.3.1
+  camera: ^0.11.0+2
+  image: ^4.2.0
+  zxing_lib: ^1.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

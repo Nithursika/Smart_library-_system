@@ -7,12 +7,18 @@ create table if not exists public.books (
   section text not null default '',
   shelf text not null,
   position int not null,
+  barcode text,
+  description text,
   status text not null default 'available'
     check (status in ('available', 'borrowed', 'missing')),
   missing_note text,
   missing_reported_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+create unique index if not exists books_barcode_key
+  on public.books (barcode)
+  where barcode is not null;
 
 alter table public.books enable row level security;
 

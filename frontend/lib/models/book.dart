@@ -7,6 +7,8 @@ class Book {
     required this.shelf,
     required this.position,
     required this.status,
+    this.barcode,
+    this.description,
   });
 
   final String id;
@@ -16,6 +18,8 @@ class Book {
   final String shelf;
   final int position;
   final String status; // available | borrowed | missing
+  final String? barcode;
+  final String? description;
 
   factory Book.fromMap(Map<String, dynamic> map) {
     return Book(
@@ -26,6 +30,8 @@ class Book {
       shelf: map['shelf'] as String,
       position: (map['position'] as num).toInt(),
       status: map['status'] as String? ?? 'available',
+      barcode: map['barcode'] as String?,
+      description: map['description'] as String?,
     );
   }
 
@@ -38,6 +44,8 @@ class Book {
       'shelf': shelf,
       'position': position,
       'status': status,
+      if (barcode != null) 'barcode': barcode,
+      if (description != null) 'description': description,
     };
   }
 }

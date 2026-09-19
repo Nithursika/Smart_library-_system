@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
 
 import '../models/book.dart';
+import '../services/led_service.dart';
 
-class NavigateScreen extends StatelessWidget {
+class NavigateScreen extends StatefulWidget {
   const NavigateScreen({super.key, required this.book});
 
   final Book book;
 
   @override
+  State<NavigateScreen> createState() => _NavigateScreenState();
+}
+
+class _NavigateScreenState extends State<NavigateScreen> {
+  String _ledStatus = 'Lighting shelf LED...';
+
+  @override
+  void initState() {
+    super.initState();
+    _lightLed();
+  }
+
+  @override
+  void dispose() {
+    // Turn LED off when leaving this screen
+    LedService.instance.turnOff();
+    super.dispose();
+  }
+
+  Future<void> _lightLed() async {
+    final message = await LedService.instance.lightShelf(widget.book.shelf);
+    if (!mounted) return;
+    setState(() => _ledStatus = message);
+  }
+
+  Future<void> _turnOffLed() async {
+    final message = await LedService.instance.turnOff();
+    if (!mounted) return;
+    setState(() => _ledStatus = message);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final book = widget.book;
     final shelves = ['S-01', 'S-02', 'S-03'];
 
     return Scaffold(
@@ -27,7 +61,19 @@ class NavigateScreen extends StatelessWidget {
               'Go to shelf ${book.shelf} · position ${book.position}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Text(
+              _ledStatus,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: _ledStatus.contains('off')
+                    ? Colors.grey.shade700
+                    : _ledStatus.startsWith('LED on')
+                        ? Colors.green.shade700
+                        : Colors.orange.shade800,
+              ),
+            ),
+            const SizedBox(height: 16),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -80,9 +126,21 @@ class NavigateScreen extends StatelessWidget {
                 }).toList(),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: _lightLed,
+              icon: const Icon(Icons.lightbulb_outline),
+              label: const Text('Light LED again'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: _turnOffLed,
+              icon: const Icon(Icons.lightbulb),
+              label: const Text('Found it — turn LED off'),
+            ),
+            const SizedBox(height: 8),
             const Text(
-              'Follow the highlighted shelf on this map.\n(ESP32 LED will light the same shelf later.)',
+              'LED also auto-offs after 30s, or when you go back.',
               textAlign: TextAlign.center,
             ),
           ],

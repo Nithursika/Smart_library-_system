@@ -30,6 +30,17 @@ class BookInfoScreen extends StatelessWidget {
             Text('Section: ${book.section}'),
             Text('Shelf: ${book.shelf}'),
             Text('Position: ${book.position}'),
+            if (book.description != null && book.description!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                'Description',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(book.description!),
+            ],
             const SizedBox(height: 12),
             StatusChip(status: book.status),
             const Spacer(),

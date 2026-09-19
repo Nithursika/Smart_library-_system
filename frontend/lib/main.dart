@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'config.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_shell.dart';
+import 'services/led_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ Future<void> main() async {
     );
   }
 
+  await LedService.instance.loadSavedUrl();
   runApp(const SmartLibraryApp());
 }
 
@@ -32,7 +34,7 @@ class SmartLibraryApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const MainShell(),
     );
   }
 }
