@@ -13,43 +13,33 @@ class BookService {
   static final _mockBooks = [
     Book(
       id: 'b1',
-      title: 'Grade 10 Chemistry',
-      author: 'NCERT',
-      section: 'Science',
-      shelf: 'S-03',
-      position: 12,
+      title: "A Good Girl's Guide Murder",
+      author: 'Holly Jackson',
+      section: 'Fiction',
+      shelf: 'S-01',
+      position: 1,
       status: 'available',
-      barcode: '8901001000001',
+      barcode: '9781405293181',
     ),
     Book(
       id: 'b2',
-      title: 'World History',
-      author: 'A. Smith',
-      section: 'History',
-      shelf: 'S-01',
-      position: 4,
-      status: 'borrowed',
-      barcode: '8901001000002',
+      title: 'Alchemist',
+      author: 'Paulo Coelho',
+      section: 'Self Motivation',
+      shelf: 'S-02',
+      position: 1,
+      status: 'available',
+      barcode: '9780062355300',
     ),
     Book(
       id: 'b3',
-      title: 'Algebra Basics',
-      author: 'R. Khan',
-      section: 'Math',
-      shelf: 'S-02',
-      position: 8,
-      status: 'missing',
-      barcode: '8901001000003',
-    ),
-    Book(
-      id: 'b4',
-      title: 'English Grammar',
-      author: 'Wren & Martin',
-      section: 'Language',
-      shelf: 'S-01',
-      position: 15,
+      title: 'Selling You',
+      author: 'Napoleon Hill',
+      section: 'Self Motivation',
+      shelf: 'S-03',
+      position: 1,
       status: 'available',
-      barcode: '8901001000004',
+      barcode: '9789386867957',
     ),
   ];
 
@@ -151,7 +141,23 @@ class BookService {
 
   Future<void> reportMissing(String id, {String? note}) async {
     final client = _client;
-    if (client == null) return;
+    if (client == null) {
+      final index = _mockBooks.indexWhere((b) => b.id == id);
+      if (index < 0) return;
+      final old = _mockBooks[index];
+      _mockBooks[index] = Book(
+        id: old.id,
+        title: old.title,
+        author: old.author,
+        section: old.section,
+        shelf: old.shelf,
+        position: old.position,
+        status: 'missing',
+        barcode: old.barcode,
+        description: old.description,
+      );
+      return;
+    }
 
     await client.from('books').update({
       'status': 'missing',

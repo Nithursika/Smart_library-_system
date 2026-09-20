@@ -1,6 +1,9 @@
 /// Project: https://supabase.com/dashboard/project/tjmhpizqqdemthkcfwls
 /// Use publishable key only (never the secret key in the app).
 class AppConfig {
+  /// Demo mode: books stay in the app only (no cloud DB).
+  static const useSupabase = false;
+
   static const supabaseUrl = 'https://tjmhpizqqdemthkcfwls.supabase.co';
   static const supabaseAnonKey =
       'sb_publishable_d1QEIdcyFbYC7omYa2oNHA_2cEtdJp_';
@@ -9,6 +12,7 @@ class AppConfig {
   static const esp32BaseUrl = 'http://192.168.1.154';
 
   static bool get isConfigured =>
+      useSupabase &&
       supabaseUrl.startsWith('https://') &&
       !supabaseAnonKey.startsWith('YOUR_');
 
